@@ -1,0 +1,8 @@
+Part,Quantity,Purpose
+ESP32,1,Main controller
+OLED Display,2,Dual displays
+MPR121,1,Touch input controller
+8-Position DIP Switch,1,Mode selector
+Speaker,1,Audio output
+Battery Pack,1,Portable power
+Buttons,Multiple,Extra controls
