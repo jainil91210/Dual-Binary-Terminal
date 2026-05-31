@@ -110,10 +110,6 @@ static const unsigned char PROGMEM image_RFIDBigChip_bits[] = {0x60,0x00,0x00,0x
 static const unsigned char PROGMEM image_Rpc_active_bits[] = {0xe0,0xac,0xe2,0x02,0x80,0x8e,0x6a,0x0e};
 
 static const unsigned char PROGMEM image_SDcardMounted_bits[] = {0xff,0xe0,0xff,0x20,0xff,0xe0,0xff,0x20,0xff,0xe0,0xff,0x20,0xff,0xe0,0xe6,0x00};
-
-// =========================
-// VARIABLES
-// =========================
 unsigned long lastTapTime = 0;
 unsigned long fingerLiftTime = 0;
 unsigned long lastStateChangeTime[12] = {0};
@@ -136,9 +132,6 @@ const int LINE_HEIGHT = 10;
 String lines[120];
 int lineCount = 0;
 
-// =========================
-// STATES
-// =========================
 enum SystemState {
   TYPING_PROMPT,
   WAITING_FOR_AI,
@@ -147,9 +140,6 @@ enum SystemState {
 
 SystemState currentState = TYPING_PROMPT;
 
-// =========================
-// HAPTICS
-// =========================
 void haptic(int durationMs) {
   digitalWrite(HAPTIC_PIN, HIGH);
   delay(durationMs);
@@ -169,10 +159,6 @@ void responseHaptic() {
   delay(90);
   haptic(220);
 }
-
-// =========================
-// CURRENT CHARACTER MAP
-// =========================
 String* getCurrentMap() {
 
   bool lowercaseMode = digitalRead(DIP1) == LOW;
@@ -194,9 +180,6 @@ String* getCurrentMap() {
   return uppercaseLetters;
 }
 
-// =========================
-// WEB HANDLERS
-// =========================
 void handleGetPrompt() {
 
   server.sendHeader("Access-Control-Allow-Origin", "*");
@@ -228,9 +211,6 @@ void handlePostData() {
   }
 }
 
-// =========================
-// TEXT WRAP
-// =========================
 void wrapTextToArray(String text, int maxCharsPerLine) {
 
   lineCount = 0;
@@ -264,9 +244,6 @@ void wrapTextToArray(String text, int maxCharsPerLine) {
   }
 }
 
-// =========================
-// SCROLL TEXT
-// =========================
 void smoothScrollText() {
 
   int totalScrollHeight = lineCount * LINE_HEIGHT;
@@ -294,7 +271,6 @@ void smoothScrollText() {
   }
 }
 void drawScreen_1(void) {
-// [BEGIN lopaka generated]
 
     display.clearDisplay();
 
@@ -317,9 +293,6 @@ void drawScreen_1(void) {
 
     display.display();
 }
-// [END lopaka generated]
-
-// [END lopaka generated]
 void drawScreen_2(void) {
 
     display.clearDisplay();
@@ -381,12 +354,10 @@ void drawScreen_3(void){
   int midX = SCREEN_WIDTH / 2;
   int midY = SCREEN_HEIGHT / 2;
 
-  // Phase 1: Center dot
   display.drawPixel(midX, midY, WHITE);
   display.display();
   delay(400);
 
-  // Phase 2: Horizontal line expansion
   for (int w = 1; w <= SCREEN_WIDTH; w += 8) {
     display.clearDisplay();
     int startX = midX - (w / 2);
@@ -396,7 +367,6 @@ void drawScreen_3(void){
   }
   delay(100); 
 
-  // Phase 3: Vertical rectangle opening
   for (int h = 1; h <= SCREEN_HEIGHT; h += 4) {
     display.clearDisplay();
     int startY = midY - (h / 2);
@@ -406,9 +376,6 @@ void drawScreen_3(void){
   }
   delay(200); 
 }
-// =========================
-// SETUP
-// =========================
 void setup() {
 
   Serial.begin(115200);
@@ -453,9 +420,6 @@ if(!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) for(;;);
   server.begin();
 }
 
-// =========================
-// LOOP
-// =========================
 void loop() {
 
   server.handleClient();
@@ -567,7 +531,6 @@ void loop() {
       }
     }
 
-    // ENTER BUTTON
     static bool lastButtonState = HIGH;
 
     bool currentButtonState = digitalRead(ENTER_BUTTON_PIN);
@@ -602,7 +565,6 @@ void loop() {
 
     lastButtonState = currentButtonState;
 
-    // LOCK LETTER
     if (waitingForTimeout &&
         (currentTime - lastTapTime > TAP_WINDOW)) {
 
@@ -620,7 +582,6 @@ void loop() {
       waitingForTimeout = false;
     }
 
-    // DISPLAY
     display.clearDisplay();
 
     display.setTextSize(1);
@@ -648,7 +609,6 @@ void loop() {
     display.display();
   }
 
-  // WAITING FOR AI
   else if (currentState == WAITING_FOR_AI) {
 
     display.clearDisplay();
@@ -668,7 +628,6 @@ void loop() {
     delay(50);
   }
 
-  // SCROLL RESPONSE
   else if (currentState == SCROLLING_RESPONSE) {
 
     newTextAvailable = false;
